@@ -28,7 +28,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import www.sanju.motiontoast.MotionToast
 import www.sanju.motiontoast.MotionToastStyle
-//#cek aja
+//#cek aja ada
 @Suppress("DEPRECATION")
 class LoginActivity : AppCompatActivity() {
     private val viewModel by viewModels<LoginViewModel> {
