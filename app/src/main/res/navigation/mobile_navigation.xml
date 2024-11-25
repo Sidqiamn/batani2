@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+
+    app:startDestination="@+id/splashFragment">
+
+    <!-- Fragment Home -->
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.batani.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <!-- Fragment Dashboard -->
+    <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="com.example.batani.ui.rekomendasi.DashboardFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_dashboard" />
+
+    <!-- Fragment Notifications -->
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.example.batani.ui.graph.NotificationsFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_notifications" />
+
+    <!-- Fragment Settings -->
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.example.batani.ui.settingss.SettingsFragment"
+        android:label="@string/settings"
+        tools:layout="@layout/fragment_settings" />
+
+    <!-- Fragment Splash -->
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.batani.splash.SplashFragment"
+        android:label="SplashFragment">
+        <action
+            android:id="@+id/action_splashFragment_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:enterAnim="@android:anim/fade_in"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashFragment_to_viewPagerFragment"
+            app:destination="@id/viewPagerFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/viewPagerFragment"
+        android:name="com.example.batani.splash.ViewPagerFragment"
+        android:label="ViewPagerFragment">
+        <action
+            android:id="@+id/action_viewPagerFragment_to_loginActivity"
+            app:destination="@id/loginActivity"
+            app:enterAnim="@android:anim/fade_in" />
+    </fragment>
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.example.batani.auth.LoginActivity"
+        android:label="LoginActivity" />
+
+
+</navigation>
