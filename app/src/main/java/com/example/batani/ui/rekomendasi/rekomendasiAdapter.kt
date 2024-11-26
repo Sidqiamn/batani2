@@ -1,49 +1,31 @@
 package com.example.batani.ui.rekomendasi
 
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.DiffUtil
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.batani.databinding.ItemQuoteBinding
-import com.example.batani.network.QuoteResponseItem
+import com.example.batani.R
 
-class rekomendasiAdapter :
-    PagingDataAdapter<QuoteResponseItem, rekomendasiAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class TanamanAdapter(private val tanamanList: List<String>) : RecyclerView.Adapter<TanamanAdapter.TanamanViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        Log.d("masuk view ", "masuk adapter")
-        val binding = ItemQuoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MyViewHolder(binding)
-
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TanamanViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.tanaman_item, parent, false)
+        return TanamanViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        Log.d("masuk view ", "masuk onbind")
-        val data = getItem(position)
-        if (data != null) {
-            holder.bind(data)
-        }
+    override fun onBindViewHolder(holder: TanamanViewHolder, position: Int) {
+        val tanaman = tanamanList[position]
+        holder.bind(tanaman)
     }
 
-    class MyViewHolder(private val binding: ItemQuoteBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: QuoteResponseItem) {
-            binding.tvItemQuote.text = data.en
-            binding.tvItemAuthor.text = data.author
-        }
-    }
+    override fun getItemCount(): Int = tanamanList.size
 
-    companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<QuoteResponseItem>() {
-            override fun areItemsTheSame(oldItem: QuoteResponseItem, newItem: QuoteResponseItem): Boolean {
-                return oldItem == newItem
-            }
+    inner class TanamanViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val nameTextView: TextView = itemView.findViewById(R.id.title_tanaman)
 
-            override fun areContentsTheSame(oldItem: QuoteResponseItem, newItem: QuoteResponseItem): Boolean {
-                return oldItem.id == newItem.id
-            }
+        fun bind(tanaman: String) {
+            nameTextView.text = tanaman
         }
     }
 }

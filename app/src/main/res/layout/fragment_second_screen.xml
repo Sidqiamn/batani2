@@ -7,28 +7,30 @@
     >
 
     <ImageView
-        android:contentDescription="@string/todo"
         android:id="@+id/background_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:contentDescription="@string/todo"
         android:scaleType="centerCrop"
 
         android:src="@drawable/tanaman_open2"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-48dp" />
+        tools:layout_editor_absoluteY="0dp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_width="268dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="100dp"
-        android:text="@string/your_title_here"
+        android:layout_marginBottom="28dp"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Temukan Tanaman Terbaik Berdasarkan lokasimu"
         android:textColor="@color/color_bg_utama"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintRight_toLeftOf="@+id/next2"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:contentDescription="@string/todo"

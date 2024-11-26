@@ -1,10 +1,8 @@
 package com.example.batani.network
 
-import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -34,11 +32,14 @@ interface ApiServiceRegister {
     ): RegisterResponse
 }
 
-interface GeminiApiService {
-    @Headers("Authorization: AIzaSyA0EcT3bdw8_INxeGJaPhRzcHwOd0k6aqI")
-    @POST("v1/gemini/complete")
-    suspend fun getResponse(@Body request: GeminiRequest): GeminiResponse
+
+interface ApiServiceTanamanApi {
+
+    @GET("tanaman")
+    suspend fun getRekomendasiTanaman(
+        @Query("temperature") temperature: Int,
+        @Query("humidity") humidity: Int,
+        @Query("rainfall") rainfall: Int
+    ): RekomendasiResponse
 }
 
-data class GeminiRequest(val prompt: String)
-data class GeminiResponse(val response: String)

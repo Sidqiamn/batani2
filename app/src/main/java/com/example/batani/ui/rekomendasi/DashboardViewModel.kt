@@ -1,26 +1,44 @@
 package com.example.batani.ui.rekomendasi
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
 
 import com.example.batani.QuoteRepository
 import com.example.batani.auth.LoginViewModel
 import com.example.batani.di.Injection
-import com.example.batani.network.QuoteResponseItem
+import com.example.batani.network.ApiConfig
+import com.example.batani.network.RekomendasiResponse
 import com.example.batani.splash.SplashViewModel
 import com.example.batani.ui.settingss.SettingsViewModel
+import kotlinx.coroutines.launch
 
-class DashboardViewModel(quoteRepository: QuoteRepository) : ViewModel() {
+class DashboardViewModel : ViewModel() {
 
-    val quote: LiveData<PagingData<QuoteResponseItem>> =
-        quoteRepository.getQuote().cachedIn(viewModelScope)
+    private val _rekomendasiResponse = MutableLiveData<RekomendasiResponse>()
+    val rekomendasiResponse: LiveData<RekomendasiResponse> get() = _rekomendasiResponse
 
+    private val apiService = ApiConfig.getApiRekomendasi() // Inisialisasi ApiService
+
+    // Fungsi untuk mengambil data rekomendasi tanaman
+    fun getRekomendasiTanaman(temperature: Int, humidity: Int, rainfall: Int) {
+        viewModelScope.launch {
+            try {
+                // Menunggu respons dari API menggunakan suspend function
+                val response = apiService.getRekomendasiTanaman(temperature, humidity, rainfall)
+                _rekomendasiResponse.value = response
+            } catch (e: Exception) {
+                Log.e("API_ERROR", "Error fetching recommendations: ${e.message}")
+            }
+        }
+    }
 }
+
 class ViewModelFactory(private val applicationContext: Context) : ViewModelProvider.Factory {
 
     companion object {
@@ -39,7 +57,7 @@ class ViewModelFactory(private val applicationContext: Context) : ViewModelProvi
         return when {
             modelClass.isAssignableFrom(DashboardViewModel::class.java) -> {
                 @Suppress("UNCHECKED_CAST")
-                DashboardViewModel(Injection.provideRepository(applicationContext)) as T
+                DashboardViewModel() as T
             }
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
                 @Suppress("UNCHECKED_CAST")

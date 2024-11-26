@@ -55,4 +55,6 @@
     <string name="send">Send</string>
     <string name="masukkan_feedback_anda">Masukkan feedback Anda</string>
     <string name="kirim_feedback">Kirim Feedback</string>
+    <string name="empety">...</string>
+    <string name="aplikasi_yang_dibuat_untuk_memudahkan_para_petani_dalam_menentukan_tanaman_yang_akan_ditanam_dan_harga_pasarnya">Aplikasi yang dibuat untuk memudahkan para petani dalam menentukan tanaman yang akan ditanam dan harga pasarnya</string>
 </resources>
