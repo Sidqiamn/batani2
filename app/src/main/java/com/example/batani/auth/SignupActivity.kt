@@ -10,7 +10,6 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import com.example.batani.R
@@ -142,17 +141,17 @@ class SignupActivity : AppCompatActivity() {
 
                     } else {
 
-                        val dialog = AlertDialog.Builder(this@SignupActivity).apply {
-                            setTitle("Registrasi Berhasil!")
-                            setMessage("Silahkan Login $email")
-                            setCancelable(false)
-                        }.create()
-
-                        dialog.show()
+                        MotionToast.darkToast(this@SignupActivity,
+                            "Berhasil Daftar 😍",
+                            "Selamat Login $name !",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(this@SignupActivity, R.font.poppins_medium))
 
 
                         Handler().postDelayed({
-                            dialog.dismiss()
+
                             finish()
                         }, 3000)
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "527170700407",
+    "project_id": "batani-fe970",
+    "storage_bucket": "batani-fe970.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:527170700407:android:43e49cfe4ca8780284f272",
+        "android_client_info": {
+          "package_name": "com.example.batani"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDViq_iRehhRvJN9xoWJE5UryHatPxdlGY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
