@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:gravity="center"
-        android:text="Tentukan harga terbaik untuk hasil tanamanmu"
+        android:text="@string/tentukan_harga_terbaik_untuk_hasil_tanamanmu"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

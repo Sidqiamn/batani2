@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
         android:fontFamily="@font/poppins_bold"
-        android:text="Temukan Tanaman Terbaik Berdasarkan lokasimu"
+        android:text="@string/temukan_tanaman_terbaik_berdasarkan_lokasimu"
         android:textColor="@color/color_bg_utama"
         android:textSize="20sp"
         android:textStyle="bold"

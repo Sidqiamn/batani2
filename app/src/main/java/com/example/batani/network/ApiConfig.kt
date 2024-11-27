@@ -43,34 +43,6 @@ class ApiConfig {
 
             return retrofit.create(ApiServiceTanamanApi::class.java)
         }
-        fun getApiServiceLogin(): ApiServiceLogin {
-            val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-            val client = OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .build()
 
-            val retrofit = Retrofit.Builder()
-                .baseUrl("https://story-api.dicoding.dev/v1/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build()
-
-            return retrofit.create(ApiServiceLogin::class.java)
-        }
-
-        fun getApiServiceRegister(): ApiServiceRegister {
-            val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-            val client = OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .build()
-
-            val retrofit = Retrofit.Builder()
-                .baseUrl("https://story-api.dicoding.dev/v1/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build()
-
-            return retrofit.create(ApiServiceRegister::class.java)
-        }
     }
 }

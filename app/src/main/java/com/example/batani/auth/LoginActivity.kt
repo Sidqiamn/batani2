@@ -9,26 +9,18 @@ import android.os.Handler
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import com.example.batani.MainActivity
 import com.example.batani.R
 import com.example.batani.databinding.ActivityLoginBinding
-import com.example.batani.network.ApiConfig
-import com.example.batani.network.RegisterResponse
 import com.example.batani.pref.UserModel
 import com.example.batani.ui.rekomendasi.ViewModelFactory
-import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.HttpException
+import com.google.firebase.auth.FirebaseAuth
 import www.sanju.motiontoast.MotionToast
 import www.sanju.motiontoast.MotionToastStyle
-//#cek aja ada
+
 @Suppress("DEPRECATION")
 class LoginActivity : AppCompatActivity() {
     private val viewModel by viewModels<LoginViewModel> {
@@ -66,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
             if (password.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
                 loginUser(email, password)
             } else {
-//                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+
                 MotionToast.darkToast(this@LoginActivity,
                     "Warning !!",
                     "Please fill all fields",
@@ -120,96 +112,66 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loginUser(email: String, password: String) {
         binding.progressIndicator.visibility = View.VISIBLE
+        val auth = FirebaseAuth.getInstance()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val apiService = ApiConfig.getApiServiceLogin()
-                val response = apiService.login(email, password)
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                binding.progressIndicator.visibility = View.GONE
+                if (task.isSuccessful) {
 
-                withContext(Dispatchers.Main) {
+                    val currentUser = auth.currentUser
+                    if (currentUser != null) {
+                        val userModel = UserModel(
+                            email = email,
+                            token = currentUser.uid
+                        )
+                        viewModel.saveSession(userModel)
 
-                    if (response.error) {
-                        binding.progressIndicator.visibility = View.GONE
-                        Toast.makeText(this@LoginActivity, "Login Failed: ${response.message}", Toast.LENGTH_SHORT).show()
-                        MotionToast.darkToast(this@LoginActivity,
-                            "Login Failed !!",
-                            response.message,
-                            MotionToastStyle.ERROR,
+                        MotionToast.darkToast(
+                            this@LoginActivity,
+                            "Berhasil Login 😍",
+                            "Selamat Datang $email !",
+                            MotionToastStyle.SUCCESS,
                             MotionToast.GRAVITY_BOTTOM,
                             MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(this@LoginActivity, R.font.poppins_medium))
+                            ResourcesCompat.getFont(this@LoginActivity, R.font.poppins_medium)
+                        )
 
-
-                    } else {
-
-                        val loginResult = response.loginResult
-                        if (loginResult != null) {
-
-                            val userModel = UserModel(
-                                email = email,
-                                token = loginResult.token,
-
-                                )
-                            viewModel.saveSession(userModel)
-
-                            binding.progressIndicator.visibility = View.GONE
-
-                            MotionToast.darkToast(this@LoginActivity,
-                                "Berhasil Login 😍",
-                                "Selamat Datang $email !",
-                                MotionToastStyle.SUCCESS,
-                                MotionToast.GRAVITY_BOTTOM,
-                                MotionToast.LONG_DURATION,
-                                ResourcesCompat.getFont(this@LoginActivity, R.font.poppins_medium))
-
-
-                            Handler().postDelayed({
-
-                                val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                startActivity(intent)
-                                finish()
-                            }, 2000)
-                        } else {
-                            binding.progressIndicator.visibility = View.GONE
-                            Toast.makeText(this@LoginActivity, "Login failed: No login result", Toast.LENGTH_SHORT).show()
-                        }
+                        Handler().postDelayed({
+                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            finish()
+                        }, 2000)
                     }
-                }
-            } catch (e: HttpException) {
-                withContext(Dispatchers.Main) {
-                    binding.progressIndicator.visibility = View.GONE
-                    val errorBody = e.response()?.errorBody()?.string()
-                    if (errorBody != null) {
-                        val errorResponse = Gson().fromJson(errorBody, RegisterResponse::class.java)
-//                        Toast.makeText(this@LoginActivity, "Error: ${errorResponse.message}", Toast.LENGTH_SHORT).show()
-                        MotionToast.darkToast(this@LoginActivity,
-                            "Error !!",
-                            errorResponse.message,
-                            MotionToastStyle.ERROR,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(this@LoginActivity, R.font.poppins_medium))
+                } else {
 
-                    } else {
-//                        Toast.makeText(this@LoginActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                        MotionToast.darkToast(this@LoginActivity,
-                            "Error !!",
-                            "${e.message}",
-                            MotionToastStyle.ERROR,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(this@LoginActivity, R.font.poppins_medium))
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    binding.progressIndicator.visibility = View.GONE
-                    Toast.makeText(this@LoginActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    val errorMessage = task.exception?.message ?: "Login failed"
+                    MotionToast.darkToast(
+                        this@LoginActivity,
+                        "Login Failed !!",
+                        errorMessage,
+                        MotionToastStyle.ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(this@LoginActivity, R.font.poppins_medium)
+                    )
                 }
             }
-        }
+            .addOnFailureListener { exception ->
+                binding.progressIndicator.visibility = View.GONE
+                MotionToast.darkToast(
+                    this@LoginActivity,
+                    "Error !!",
+                    exception.message ?: "An error occurred",
+                    MotionToastStyle.ERROR,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.LONG_DURATION,
+                    ResourcesCompat.getFont(this@LoginActivity, R.font.poppins_medium)
+                )
+            }
     }
+
 
 
 }
