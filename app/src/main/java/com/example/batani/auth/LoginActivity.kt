@@ -17,6 +17,7 @@ import com.example.batani.R
 import com.example.batani.databinding.ActivityLoginBinding
 import com.example.batani.pref.UserModel
 import com.example.batani.ui.rekomendasi.ViewModelFactory
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import www.sanju.motiontoast.MotionToast
 import www.sanju.motiontoast.MotionToastStyle
@@ -30,12 +31,18 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Inisialisasi Firebase
+        FirebaseApp.initializeApp(this)
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         setupView()
         setupAction()
         playAnimation()
     }
+
 
     private fun setupView() {
         @Suppress("DEPRECATION")
