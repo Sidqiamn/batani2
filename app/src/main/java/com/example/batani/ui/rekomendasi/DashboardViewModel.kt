@@ -23,21 +23,27 @@ class DashboardViewModel : ViewModel() {
     private val _rekomendasiResponse = MutableLiveData<RekomendasiResponse>()
     val rekomendasiResponse: LiveData<RekomendasiResponse> get() = _rekomendasiResponse
 
-    private val apiService = ApiConfig.getApiRekomendasi() // Inisialisasi ApiService
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
+    private val apiService = ApiConfig.getApiRekomendasi()
 
     // Fungsi untuk mengambil data rekomendasi tanaman
     fun getRekomendasiTanaman(temperature: Int, humidity: Int, rainfall: Int) {
         viewModelScope.launch {
+            _isLoading.value = true // Progress bar mulai tampil
             try {
-                // Menunggu respons dari API menggunakan suspend function
                 val response = apiService.getRekomendasiTanaman(temperature, humidity, rainfall)
                 _rekomendasiResponse.value = response
             } catch (e: Exception) {
                 Log.e("API_ERROR", "Error fetching recommendations: ${e.message}")
+            } finally {
+                _isLoading.value = false // Progress bar berhenti
             }
         }
     }
 }
+
 
 class ViewModelFactory(private val applicationContext: Context) : ViewModelProvider.Factory {
 
@@ -71,6 +77,7 @@ class ViewModelFactory(private val applicationContext: Context) : ViewModelProvi
                 @Suppress("UNCHECKED_CAST")
                 SplashViewModel(Injection.provideRepository(applicationContext)) as T
             }
+
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     }

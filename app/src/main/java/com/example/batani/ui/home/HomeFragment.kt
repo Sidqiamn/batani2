@@ -4,14 +4,17 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.*
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.batani.R
+import com.example.batani.database.LokasiRepository
 import com.example.batani.databinding.FragmentHomeBinding
 import com.example.batani.ui.maps.MapsActivity
 
@@ -20,7 +23,7 @@ class HomeFragment : Fragment() {
     private val bitmapSize = 500  // Ukuran bitmap
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
+    private lateinit var lokasiRepository: LokasiRepository
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,7 +32,11 @@ class HomeFragment : Fragment() {
         val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        // Inisialisasi repository
+        lokasiRepository = LokasiRepository(requireActivity().application)
 
+        // Contoh: Ambil kode kota dari database
+        getCityCode("Bandung")
         // Buat dan tampilkan rounded Bitmap dengan teks dan ikon untuk ketiga ImageView
         val roundedBitmap1 = createRoundedBitmapWithText("Wind", "70", R.drawable.iconswind)
         val roundedBitmap2 = createRoundedBitmapWithText("Rainfall", "30 m/s", R.drawable.iconsrainfall)
@@ -47,6 +54,18 @@ class HomeFragment : Fragment() {
         return root
     }
 
+    private fun getCityCode(cityName: String) {
+        lokasiRepository.getCityCode(cityName) { cityCode ->
+            // Tampilkan hasil dalam log atau toast
+            if (cityCode != null) {
+                Log.d("HomeFragment", "Kode Kota $cityName: $cityCode")
+                Toast.makeText(requireContext(), "Kode Kota $cityName: $cityCode", Toast.LENGTH_SHORT).show()
+            } else {
+                Log.d("HomeFragment", "Kota $cityName tidak ditemukan di database.")
+                Toast.makeText(requireContext(), "Kota $cityName tidak ditemukan di database.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
     private fun createRoundedBitmapWithText(text1: String, text2: String, iconResId: Int): Bitmap {
         // Membuat bitmap dengan transparansi
         val bitmap = Bitmap.createBitmap(bitmapSize, bitmapSize, Bitmap.Config.ARGB_8888)

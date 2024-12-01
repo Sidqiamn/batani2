@@ -24,20 +24,25 @@ class DashboardFragment : Fragment() {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        viewModel = ViewModelProvider(this)[DashboardViewModel::class.java]
 
 
-        viewModel = ViewModelProvider(this).get(DashboardViewModel::class.java)
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
 
         viewModel.rekomendasiResponse.observe(viewLifecycleOwner) { rekomendasi ->
-
             binding.rekomendasi1.text = rekomendasi.rekomendasi1
             binding.rekomendasi2.text = rekomendasi.rekomendasi2
             binding.rekomendasi3.text = rekomendasi.rekomendasi3
-
         }
-        viewModel.getRekomendasiTanaman(90, 90, 10)
+
+
+        viewModel.getRekomendasiTanaman(80, 90, 10)
 
         return root
     }
+
 }
 
