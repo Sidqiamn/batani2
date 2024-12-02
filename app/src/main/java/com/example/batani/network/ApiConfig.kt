@@ -44,5 +44,25 @@ class ApiConfig {
             return retrofit.create(ApiServiceTanamanApi::class.java)
         }
 
+        fun getApibmkg(): BMKGApiService {
+            val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+            val client = OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
+                .build()
+
+            // Gunakan GsonBuilder untuk mendaftarkan InstanceCreator
+            val gson = GsonBuilder()
+                .registerTypeAdapter(RekomendasiResponse::class.java, RekomendasiResponseInstanceCreator())
+                .create()
+
+            val retrofit = Retrofit.Builder()
+                .baseUrl("https://cropdeploy-856805603330.asia-southeast2.run.app/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
+                .build()
+
+            return retrofit.create(BMKGApiService::class.java)
+        }
+
     }
 }

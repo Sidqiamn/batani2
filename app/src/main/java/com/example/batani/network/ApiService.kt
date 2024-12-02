@@ -1,15 +1,12 @@
 package com.example.batani.network
 
+import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ApiService {
 }
 
-interface ApiServiceLogin {
-}
-interface ApiServiceRegister {
-}
 
 
 interface ApiServiceTanamanApi {
@@ -21,4 +18,7 @@ interface ApiServiceTanamanApi {
         @Query("rainfall") rainfall: Int
     ): RekomendasiResponse
 }
-
+interface BMKGApiService {
+    @GET("weather")
+    suspend fun getWeather(@Query("kodeWilayah") kodeWilayah: String): LokasiResponse
+}

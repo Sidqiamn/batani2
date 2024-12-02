@@ -5,6 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.batani.R
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,11 +32,16 @@ abstract class AppDatabase : RoomDatabase() {
                             override fun onCreate(db: SupportSQLiteDatabase) {
                                 super.onCreate(db)
                                 CoroutineScope(Dispatchers.IO).launch {
+                                    val jsonString = context.resources.openRawResource(R.raw.cities)
+                                        .bufferedReader()
+                                        .use { it.readText() }
+                                    val gson = Gson()
+                                    val cityListType = object : TypeToken<List<City>>() {}.type
+                                    val cities: List<City> = gson.fromJson(jsonString, cityListType)
+
                                     INSTANCE?.let { database ->
                                         database.lokasiDao().apply {
-                                            // Data awal
-                                            insertCity(City("Bandung", "BDG"))
-                                            insertCity(City("Jakarta", "JKT"))
+                                            cities.forEach { insertCity(it) }
                                         }
                                     }
                                 }

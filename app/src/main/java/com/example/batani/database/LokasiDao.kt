@@ -14,4 +14,6 @@ interface LokasiDao {
         (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCity(city: City)
 
+
+
 }

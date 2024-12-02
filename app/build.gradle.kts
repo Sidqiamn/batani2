@@ -47,7 +47,8 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:22.1.1")
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
 
-
+    implementation(libs.gson)
+    implementation(libs.play.services.location)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

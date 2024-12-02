@@ -2,7 +2,10 @@ package com.example.batani.ui.home
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.*
+import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,13 +13,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.batani.R
 import com.example.batani.database.LokasiRepository
 import com.example.batani.databinding.FragmentHomeBinding
 import com.example.batani.ui.maps.MapsActivity
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.CancellationTokenSource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import java.io.IOException
+import java.util.Locale
 
 class HomeFragment : Fragment() {
 
@@ -24,48 +39,95 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var lokasiRepository: LokasiRepository
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var currentLocation: Location? = null
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                getMyLocation()
+            } else {
+                showToast("Permission denied. Cannot access location.")
+            }
+        }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+
+        ViewModelProvider(this)[HomeViewModel::class.java]
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        // Inisialisasi repository
-        lokasiRepository = LokasiRepository(requireActivity().application)
 
-        // Contoh: Ambil kode kota dari database
-        getCityCode("Bandung")
+        // Inisialisasi repository dan fusedLocationClient
+        lokasiRepository = LokasiRepository(requireActivity().application)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
+        loadAndSaveCitiesAsync {
+            getMyLocation()
+        }
+
         // Buat dan tampilkan rounded Bitmap dengan teks dan ikon untuk ketiga ImageView
         val roundedBitmap1 = createRoundedBitmapWithText("Wind", "70", R.drawable.iconswind)
         val roundedBitmap2 = createRoundedBitmapWithText("Rainfall", "30 m/s", R.drawable.iconsrainfall)
         val roundedBitmap3 = createRoundedBitmapWithText("Humidity", "1 m/s", R.drawable.iconshumidity)
 
         binding.namaKota.setOnClickListener { goToMaps() }
+
         // Set bitmap ke masing-masing ImageView
         binding.containerParameterCuaca.setImageBitmap(roundedBitmap1)
         binding.containerParameterCuaca2.setImageBitmap(roundedBitmap2)
         binding.containerParameterCuaca3.setImageBitmap(roundedBitmap3)
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             showExitConfirmationDialog()
         }
 
+        getMyLocation()
         return root
     }
+    private fun loadAndSaveCitiesAsync(onComplete: () -> Unit) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val inputStream = requireContext().assets.open("cities.json")
+                val jsonString = inputStream.bufferedReader().use { it.readText() }
+                val cities = JSONArray(jsonString)
+
+                for (i in 0 until cities.length()) {
+                    val city = cities.getJSONObject(i)
+                    val name = city.getString("name")
+                    val code = city.getString("code")
+
+                    lokasiRepository.insertCity(name, code)
+                }
+
+                withContext(Dispatchers.Main) {
+                    onComplete()
+                }
+            } catch (e: Exception) {
+                Log.e("HomeFragment", "Failed to load or save cities.json", e)
+            }
+        }
+    }
+
 
     private fun getCityCode(cityName: String) {
         lokasiRepository.getCityCode(cityName) { cityCode ->
             // Tampilkan hasil dalam log atau toast
             if (cityCode != null) {
                 Log.d("HomeFragment", "Kode Kota $cityName: $cityCode")
-                Toast.makeText(requireContext(), "Kode Kota $cityName: $cityCode", Toast.LENGTH_SHORT).show()
+                showToast("Kode Kota $cityName: $cityCode")
             } else {
                 Log.d("HomeFragment", "Kota $cityName tidak ditemukan di database.")
-                Toast.makeText(requireContext(), "Kota $cityName tidak ditemukan di database.", Toast.LENGTH_SHORT).show()
+                showToast("Kota $cityName tidak ditemukan di database.")
             }
         }
     }
+
     private fun createRoundedBitmapWithText(text1: String, text2: String, iconResId: Int): Bitmap {
         // Membuat bitmap dengan transparansi
         val bitmap = Bitmap.createBitmap(bitmapSize, bitmapSize, Bitmap.Config.ARGB_8888)
@@ -146,11 +208,14 @@ class HomeFragment : Fragment() {
         return roundedBitmap
     }
 
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 
     private fun showExitConfirmationDialog() {
         val builder = AlertDialog.Builder(requireContext())
@@ -173,5 +238,66 @@ class HomeFragment : Fragment() {
         startActivity(intent)
     }
 
-}
+    private fun getMyLocation() {
+        binding.progressBar.visibility = View.VISIBLE
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            val cancellationTokenSource = CancellationTokenSource()
+            fusedLocationClient.getCurrentLocation(
+                com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY,
+                cancellationTokenSource.token
+            ).addOnSuccessListener { location ->
+                if (location != null) {
+                    currentLocation = location
+                    currentLocation?.let { location ->
+                        getDistrictName(location.latitude, location.longitude)
+                    }
+                    binding.progressBar.visibility = View.GONE
+                    Log.d("Location", "Lat: ${location.latitude}, Lng: ${location.longitude}")
+                } else {
+                    Log.d("Location", "Location is null")
+                    binding.progressBar.visibility = View.GONE
+                }
+            }.addOnFailureListener { exception ->
+                Log.e("Location", "Failed to get location", exception)
+                binding.progressBar.visibility = View.GONE
+            }
+        } else {
+            requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
 
+    private fun getDistrictName(latitude: Double, longitude: Double) {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        try {
+            val addressList = geocoder.getFromLocation(latitude, longitude, 1)
+            if (!addressList.isNullOrEmpty()) {
+                val address = addressList[0]
+
+                // Ambil nama kota
+                val district = address.subAdminArea  // Nama kecamatan atau distrik
+                val kecamatan = address.locality
+
+                // Menghilangkan kata "Kota" dari nama kota jika ada
+                val cleanedCity = district?.replaceFirst("Kota ", "") ?: district
+
+                // Menampilkan nama kota setelah dihapus kata "Kota"
+                binding.namaKota.text = cleanedCity ?: "Nama kota tidak ditemukan"
+
+                // Memanggil getCityCode dengan nama kota yang telah dibersihkan
+                kecamatan?.let {
+                    getCityCode(it) // Menggunakan nama kota untuk mendapatkan kode kota
+                }
+            }
+        } catch (e: IOException) {
+            Log.e("Location", "Error fetching address", e)
+            binding.namaKota.text = "Tidak bisa mendapatkan nama kota"  // Tangani kesalahan
+        }
+    }
+
+
+
+}
