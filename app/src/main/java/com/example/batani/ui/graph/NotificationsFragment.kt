@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,8 +43,9 @@ class NotificationsFragment : Fragment() {
         val sharedPreferences: SharedPreferences =
             requireContext().getSharedPreferences("TanamanPrefs", Context.MODE_PRIVATE)
         val listoftanaman = mutableListOf<String>()
-
-        for (i in 0 until 4) {
+        val jumlahtanaman = sharedPreferences.getString("jumlahrekomendasi", null)
+        Log.d("jumlahrekomendasi", jumlahtanaman.toString())
+        for (i in 0 until (jumlahtanaman?.toInt() ?: 4)) {
             val tanaman = sharedPreferences.getString("tanaman_${i}", null)
             tanaman?.let { listoftanaman.add(it) }
         }

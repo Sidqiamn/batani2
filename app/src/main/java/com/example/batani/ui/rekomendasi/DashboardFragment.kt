@@ -104,6 +104,9 @@ class DashboardFragment : Fragment() {
 
                 val jumlahTanaman = namaTanamanList.size
 
+                editor.putString("jumlahrekomendasi", jumlahTanaman.toString())
+
+
                 for (i in 0 until jumlahTanaman) {
                     // Membuat kunci dinamis berdasarkan jumlah tanaman
                     val key = "tanaman_$i"
