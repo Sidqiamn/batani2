@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <ImageView
+        android:contentDescription="@string/todo"
+        android:id="@+id/background_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/onboardingimg1"
+        android:scaleType="centerCrop"
+
+        android:layout_gravity="center" />
+
+    <View
+        android:id="@+id/green_canvas"
+        android:layout_width="match_parent"
+        android:layout_height="309dp"
+
+        android:background="@drawable/rounded_top"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.375"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:contentDescription="@string/todo"
+        android:id="@+id/logo_batani"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/logo_batani_nobg"
+        app:layout_constraintLeft_toLeftOf="@id/green_canvas"
+        app:layout_constraintTop_toTopOf="@+id/green_canvas" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:text="@string/batani"
+        android:textColor="@color/green_500"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/logo_batani"
+        app:layout_constraintLeft_toRightOf="@+id/logo_batani"
+        app:layout_constraintTop_toTopOf="@+id/logo_batani"
+        app:layout_constraintVertical_bias="0.574" />
+
+    <TextView
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/rounded_green_background"
+        android:text="@string/next"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:paddingVertical="10dp"
+
+        android:paddingHorizontal="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="120dp"
+        android:text="@string/aplikasi_yang_dibuat_untuk_memudahkan_para_petani_dalam_menentukan_tanaman_yang_akan_ditanam_dan_harga_pasarnya"
+        app:layout_constraintBottom_toBottomOf="@id/green_canvas"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/green_canvas" />
+
+    <ImageView
+        android:contentDescription="@string/todo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/onboarding1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="30dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,73 @@
+<resources>
+    <string name="app_name">Batani</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="info_awan">info_awan</string>
+
+    <string name="beranda">Beranda</string>
+    <string name="rekomendasi">Rekomendasi</string>
+    <string name="grafik">grafik</string>
+    <string name="settings">settings</string>
+
+    <string name="rekomendasi_tanaman">Rekomendasi Tanaman</string>
+    <string name="masukan_jenis_tanah_dan_ph">Masukan Jenis Tanah dan PH</string>
+
+    <string name="logout">logout</string>
+    <string name="prediksi_harga_tanaman">Prediksi Harga Tanaman</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+</string>
+
+
+    ing>
+
+
+    <string name="todo">TODO</string>
+    <string name="name">Name</string>
+    <string name="sign_up">Sign Up</string>
+
+    <string name="login2">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confused_about_what_to_plant_today_try_this_application">confused about what to plant today? try this application</string>
+    <string name="welcome_again">Welcome again!</string>
+    <string name="pleae_log_in">Pleae log in.</string>
+    <string name="welcome_to">Welcome to</string>
+    <string name="batani">BATANI</string>
+    <string name="belum_memiliki_akun">Belum memiliki akun?</string>
+    <string name="daftar">Daftar</string>
+    <string name="masuk">Masuk</string>
+    <string name="next">Next</string>
+    <string name="bandung">Bandung</string>
+    <string name="_21">21°</string>
+    <string name="suhu_text">%1$s°</string>
+    <string name="partly_cloud">Partly Cloud</string>
+    <string name="your_title_here">Your Title Here</string>
+    <string name="bataniers">Bataniers</string>
+    <string name="help_amp_support"><![CDATA[Help & support]]></string>
+    <string name="security_amp_privacy"><![CDATA[Security & Privacy]]></string>
+    <string name="feedback">Feedback</string>
+    <string name="find_the_best_plant_price">Find The Best Plant Price</string>
+    <string name="get_started">Get Started</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="background_image">Background image</string>
+    <string name="chat_bot">Chat Bot</string>
+    <string name="type_a_message">Type a message</string>
+    <string name="send">Send</string>
+    <string name="masukkan_feedback_anda">Masukkan feedback Anda</string>
+    <string name="kirim_feedback">Kirim Feedback</string>
+    <string name="empety">...</string>
+    <string name="aplikasi_yang_dibuat_untuk_memudahkan_para_petani_dalam_menentukan_tanaman_yang_akan_ditanam_dan_harga_pasarnya">Aplikasi yang dibuat untuk memudahkan para petani dalam menentukan tanaman yang akan ditanam dan harga pasarnya</string>
+    <string name="temukan_tanaman_terbaik_berdasarkan_lokasimu">Temukan Tanaman Terbaik Berdasarkan lokasimu</string>
+    <string name="tentukan_harga_terbaik_untuk_hasil_tanamanmu">Tentukan harga terbaik untuk hasil tanamanmu</string>
+    <string name="batani_will_access_your_location_only_while_using_the_app">BATANI WILL ACCESS YOUR LOCATION ONLY WHILE USING THE APP</string>
+    <string name="informasi_aplikasi">Informasi Aplikasi</string>
+    <string name="deskripsi_batani_infoapl">Fitur rekomendasi tanaman BATANI memanfaatkan curah hujan, suhu, dan data lingkungan lainnya untuk menyarankan tanaman yang cocok untuk dibudidayakan. Fitur ini tidak hanya membantu petani memilih tanaman yang sesuai, tetapi juga memperkenalkan peluang untuk menanam tanaman baru dengan potensi pasar yang menjanjikan. Petani dapat memproyeksikan potensi keuntungan untuk setiap jenis tanaman, memungkinkan mereka untuk membuat keputusan yang lebih terinformasi dan strategis. Selain itu, fitur ini mendorong diversifikasi tanaman, mendukung pertanian berkelanjutan dan mengurangi risiko gagal panen karena ketergantungan pada satu jenis tanaman.</string>
+    <string name="access_location">Access Location</string>
+    <string name="prediksi_cuaca">Prediksi Cuaca</string>
+    <string name="loading_please_wait">Loading, please wait...</string>
+    <string name="buah_naga">Buah Naga</string>
+    <string name="waktu_penanaman">Waktu Penanaman :  </string>
+    <string name="jenis_tanah">Jenis Tanah</string>
+    <string name="ph_tanah">PH tanah : </string>
+</resources>
