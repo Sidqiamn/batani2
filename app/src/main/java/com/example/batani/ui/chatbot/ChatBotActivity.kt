@@ -50,7 +50,7 @@ class ChatBotActivity : AppCompatActivity() {
 
         val generativeModel = GenerativeModel(
             modelName = "gemini-1.5-flash",
-
+//            apiKey = "yout_key"
         )
 
         CoroutineScope(Dispatchers.IO).launch {
